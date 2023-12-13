@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('seller_id')->nullable(false);
             $table->unsignedBigInteger('product_id')->nullable(false);
             $table->text('review');
-            $table->string('rating');
+            $table->integer('rating');
             $table->timestamps();
 
             $table->foreign('user_id')->on('User')->references('id');

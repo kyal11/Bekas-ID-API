@@ -15,15 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable(false);
             $table->string('name');
-            $table->string('condition');
+            $table->enum('condition',['bekas','baru']);
             $table->integer('price');
-            $table->unsignedBigInteger('img_product_id')->nullable();
             $table->text('description');
             $table->string('category');
             $table->timestamps();
 
             $table->foreign('user_id')->on('User')->references('id');
-            $table->foreign('image_product_id')->on('image')->references('id');
         });
     }
 

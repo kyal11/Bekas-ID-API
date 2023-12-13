@@ -13,8 +13,14 @@ return new class extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('product_id')->nullable();
+            $table->enum('context',['profile','product']);
             $table->string('name_file_image');
             $table->timestamps();
+
+            $table->foreign('user_id')->on('User')->references('id');
+            $table->foreign('product_id')->on('product')->references('id');
         });
     }
 

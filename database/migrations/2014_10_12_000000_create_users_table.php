@@ -22,8 +22,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
 
-            $table->foreign('img_profil_id')->on('image')->references('id');
-            $table->foreign('role')->on('userRole')->references('id');
+            $table->foreign('role_id')->on('userRole')->references('id');
         });
     }
 

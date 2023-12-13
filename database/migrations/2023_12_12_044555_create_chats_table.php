@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('seller_id');
+            $table->unsignedBigInteger('offer_id');
             $table->longText('chat');
             $table->timestamps();
 
             $table->foreign('user_id')->on('User')->references('id');
             $table->foreign('seller_id')->on('User')->references('id');
+            $table->foreign('offer_id')->on('offers')->references('id');
         });
     }
 

@@ -15,12 +15,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('seller_id');
+            $table->unsignedBigInteger('product_id');
             $table->integer('price');
-            $table->string('status');
+            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamps();
 
             $table->foreign('user_id')->on('User')->references('id');
             $table->foreign('seller_id')->on('User')->references('id');
+            $table->foreign('product_id')->on('product')->references('id');
         });
     }
 
