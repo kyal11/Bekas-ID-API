@@ -20,9 +20,9 @@ return new class extends Migration
             $table->integer('rating');
             $table->timestamps();
 
-            $table->foreign('user_id')->on('User')->references('id');
-            $table->foreign('seller_id')->on('User')->references('id');
-            $table->foreign('product_id')->on('product')->references('id');
+            $table->foreign('user_id')->on('users')->references('id');
+            $table->foreign('seller_id')->on('users')->references('id');
+            $table->foreign('product_id')->on('products')->references('id');
         });
     }
 
