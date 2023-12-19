@@ -6,14 +6,14 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class UserUpdateRequest extends FormRequest
+class AuthcreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -27,14 +27,16 @@ class UserUpdateRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
-            'phone_number' => ''
+            'confirm_password' => 'required|min:8',
+            'phone_number' => 'nullable',
+            'image_profile' => 'nullable'
         ];
     }
     protected function failedValidation(Validator $validator) {
-        throw new HttpResponseException(response()->json([
+        throw new HttpResponseException(response([
             'status' => false,
             'message' => 'Validation Error',
             'errors' => $validator->getMessageBag()
-        ],403));
+        ],401));
     }
 }

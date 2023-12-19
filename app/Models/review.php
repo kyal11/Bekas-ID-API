@@ -29,4 +29,6 @@ class review extends Model
     public function product(): BelongsTo {
         return $this->belongsTo(product::class, 'product_id');
     }
+
+    
 }
