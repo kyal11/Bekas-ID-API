@@ -7,6 +7,7 @@ use App\Http\Requests\AuthLoginRequest;
 use App\Http\Resources\AuthResource;
 use App\Models\image;
 use App\Models\User;
+use App\Models\userRole;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -17,13 +18,14 @@ class AuthController extends Controller
     public function register(AuthCreateRequest $request)
     {
         $data = $request->validated();
-
+        
         if ($data['password'] == $data['confirm_password']) {
             $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => bcrypt($data['password']),
-                'phone_number' => $data['phone_number']
+                'phone_number' => $data['phone_number'],
+                'role_id' => 2
             ]);
     
             if (isset($data['image_profile'])) {
@@ -68,7 +70,6 @@ class AuthController extends Controller
     }
     public function currentUser(Request $request) {
         $user = $request->user();
-
         if (!$user) {
             return response()->json([
                 'status' => false,

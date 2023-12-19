@@ -13,7 +13,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,11 +23,13 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = $this->user();
         return [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8',
-            'phone_number' => ''
+            'name' => 'nullable',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|min:8',
+            'phone_number' => 'nullable',
+            'image_profile' => 'nullable'
         ];
     }
     protected function failedValidation(Validator $validator) {

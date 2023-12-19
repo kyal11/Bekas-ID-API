@@ -29,7 +29,8 @@ class AuthcreateRequest extends FormRequest
             'password' => 'required|min:8',
             'confirm_password' => 'required|min:8',
             'phone_number' => 'nullable',
-            'image_profile' => 'nullable'
+            'image_profile' => 'nullable',
+            'role_id' => 'nullable'
         ];
     }
     protected function failedValidation(Validator $validator) {
