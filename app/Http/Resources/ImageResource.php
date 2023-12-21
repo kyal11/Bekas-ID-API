@@ -15,7 +15,8 @@ class ImageResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'user_id' => $this->user_id,
+            'user_id' => $this->whenNotNull($this->user_id),
+            'product_id' => $this->whenNotNull($this->product_id),
             'context' => $this->context,
             'name_file_image' => $this->name_file_image,
         ];

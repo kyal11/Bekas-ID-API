@@ -21,7 +21,7 @@ class UserController extends Controller
             $users = User::with('image')
             ->when($searchName, fn ($query) => $query->where('name', 'like', '%' . $searchName . '%'))
             ->get();
-    
+            
             if ($users->isEmpty()) {
                 return response()->json([
                     'status' => false,
