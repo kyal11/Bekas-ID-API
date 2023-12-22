@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\OfferController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -40,6 +41,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('product', [ProductController::class, 'store']);
     Route::post('product/{id}', [ProductController::class, 'update']);
     Route::delete('product/{id}', [ProductController::class, 'destroy']);
+    Route::delete('product/{idProduct}/image/{idImage}', [ProductController::class, 'deleteProductImageById']);
+
+    Route::post('product/{id}/offer', [OfferController::class, 'store']);
+    Route::put('/product/{idProduct}/offer/{idOffer}/accept', [OfferController::class, 'setAcceptOffer']);
+    Route::put('/product/{idProduct}/offer/{idOffer}/reject', [OfferController::class, 'setRejectOffer']);
+    Route::get('/product/{idProduct}/offer', [OfferController::class, 'getAllOffers']);
+    Route::get('/product/{idProduct}/offer/{idOffer}', [OfferController::class, 'getDetailOffer']);
+    Route::put('/product/{idProduct}/offer/{idOffer}', [OfferController::class, 'updateOffer']);
+    Route::delete('/product/{idProduct}/offer/{idOffer}', [OfferController::class, 'deleteOffer']);
 });
 
 

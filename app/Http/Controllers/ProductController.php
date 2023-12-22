@@ -45,7 +45,7 @@ class ProductController extends Controller
     }
     public function show($id) {
         try {
-            $product = Product::with('image')->findOrFail($id);
+            $product = Product::with('image')->find($id);
 
             if(!$product) {
                 return response()->json([
@@ -87,13 +87,18 @@ class ProductController extends Controller
         try {
             $data = $request->validated();
             $user = $request->user();
-            $product = Product::with('image')->findOrFail($id);
-    
+            $product = Product::find($id);
+            if(!$product) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'product not found'
+                ], 404);
+            }
             if ($user->id == $product->user_id || $user->role_id == 1) {
                 $product->update($data);
 
                 $this->handleImageUpload($data, $product);
-    
+                $product = Product::with('image')->findOrFail($id);
                 return response()->json([
                     'status' => true,
                     'message' => 'Product updated successfully',
@@ -117,8 +122,14 @@ class ProductController extends Controller
     {
         try {
             $user = $request->user();
-            $product = Product::with('image')->findOrFail($id);
-    
+            $product = Product::with('image')->find($id);
+            
+            if(!$product) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'product not found'
+                ], 404);
+            }
             if ($user->id == $product->user_id || $user->role_id == 1) {
                 foreach ($product->image as $image) {
                     Storage::delete('product/' . $image->name_file_image);
@@ -146,26 +157,74 @@ class ProductController extends Controller
         }
     }
     
+    public function deleteProductImageById(Request $request, $idProduct, $idImage)
+    {
+        try {
+            $user = $request->user();
+    
+            $product = Product::with('image')->find($idProduct);
+            if(!$product) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'product not found'
+                ], 404);
+            }
+            if ($user->id == $product->user_id || $user->role_id == 1) {
+
+                $image = Image::findOrFail($idImage);
+
+                Storage::delete('product/' . $image->name_file_image);
+
+                $image->delete();
+    
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Product image deleted successfully',
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized to delete this product image',
+                ], 403);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error deleting product image',
+                'error' => $th->getMessage(),
+            ], 500);
+        }
+    }
     private function handleImageUpload($request, $product)
     {
-        if (isset($request['product_image'])) {
-            $productImages = $request['product_image'];
+        try{
+            if (isset($request['product_image'])) {
+                $productImages = $request['product_image'];
 
-            if (!is_array($productImages)) {
-                $productImages = [$productImages];
+                if (!is_array($productImages)) {
+                    $productImages = [$productImages];
+                }
+
+                foreach ($productImages as $image) {
+                    $filename = $image->getClientOriginalName();
+
+
+                    $image->storeAs('product', $filename);
+
+                    image::updateOrCreate([   
+                            'product_id' => $product->id, 
+                            'context' => 'product',
+                            'name_file_image' => $filename
+                        ]
+                    );
+                }
             }
-
-            foreach ($productImages as $image) {
-                $filename = $image->getClientOriginalName();
-
-
-                $image->storeAs('product', $filename);
-
-                image::updateOrCreate(
-                    ['product_id' => $product->id, 'context' => 'product'],
-                    ['name_file_image' => $filename]
-                );
-            }
+        } catch(\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error upload product image',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 }

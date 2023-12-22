@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ImageResource extends JsonResource
+class OfferResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,10 +16,10 @@ class ImageResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user_id' => $this->whenNotNull($this->user_id),
-            'product_id' => $this->whenNotNull($this->product_id),
-            'context' => $this->context,
-            'name_file_image' => $this->name_file_image,
+            'user_id' => $this->user_id,
+            'seller_id' => $this->seller_id,
+            'price' => $this->price,
+            'status' => $this->status
         ];
     }
 }
