@@ -11,7 +11,7 @@ class ChatRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,11 @@ class ChatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'user_id' => 'required',
+            'seller_id' => 'required',
+            'offer_id' => 'required',
+            'sender_type' => 'required',
+            'chat' => 'required'
         ];
     }
 }

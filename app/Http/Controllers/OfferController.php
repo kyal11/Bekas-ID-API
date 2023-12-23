@@ -25,7 +25,7 @@ class OfferController extends Controller
                 ], 404);
             }
 
-            $offer = $product->offers()->create([
+            $offer = $product->offer()->create([
                 'user_id' => $user->id,
                 'seller_id' => $product->user_id,
                 'price' => $data['price'],

@@ -53,7 +53,7 @@ class UserController extends Controller
                 'status' => true,
                 'message' => 'successful found users',
                 'data' => new UserResource($user)
-            ]);
+            ], 200);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
         }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\UserController;
@@ -50,6 +51,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/product/{idProduct}/offer/{idOffer}', [OfferController::class, 'getDetailOffer']);
     Route::put('/product/{idProduct}/offer/{idOffer}', [OfferController::class, 'updateOffer']);
     Route::delete('/product/{idProduct}/offer/{idOffer}', [OfferController::class, 'deleteOffer']);
+
+    Route::post('chat', [ChatController::class, 'store']);
+    Route::get('chat/offer/{id}' , [ChatController::class, 'getChatByOffer']);
+    Route::get('chat/{idUser}/{idSeller}', [ChatController::class, 'getChatBetweenUserAndSeller']);
+    Route::delete('chat/offer/{id}' , [ChatController::class, 'destroyByOffer']);
+    Route::delete('chat/{idUser}/{idSeller}', [ChatController::class, 'destroyByUserAndSeller']);
 });
 
 

@@ -14,6 +14,7 @@ class chat extends Model
         'user_id',
         'seller_id',
         'offer_id',
+        'sender_type',
         'chat'
     ];
 
