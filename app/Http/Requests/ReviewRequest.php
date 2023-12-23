@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ReviewRequest extends FormRequest
 {
@@ -11,7 +13,7 @@ class ReviewRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +24,17 @@ class ReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'seller_id' => 'required',
+            'product_id' => 'required',
+            'review' => 'required',
+            'rating' => 'required|numeric|between:1,5'
         ];
+    }
+    protected function failedValidation(Validator $validator) {
+        throw new HttpResponseException(response([
+            'status' => false,
+            'message' => 'Validation Error',
+            'errors' => $validator->getMessageBag()
+        ],403));
     }
 }

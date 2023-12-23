@@ -90,5 +90,30 @@ class UserController extends Controller
         }
     }
     
+    public function getUserWithReview($id)
+    {
+        try {
+            $user = User::with(['image', 'sellerReview'])->findOrFail($id);
+
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'User not found',
+                ], 404);
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Successful found user with reviews',
+                'data' => new UserResource($user)
+            ], 200);
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
+
+    public function getUserWithRating() {
+        
+    }
 
 }
