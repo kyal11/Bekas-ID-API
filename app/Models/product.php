@@ -17,8 +17,12 @@ class product extends Model
         'condition',
         'price',
         'description',
-        'category'
+        'category_id'
     ];
+
+    public function category(): HasMany {
+        return $this->hasMany(category::class, 'category_id');
+    }
 
     public function image(): HasMany {
         return $this->hasMany(image::class, 'product_id');

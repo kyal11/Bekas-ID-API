@@ -21,7 +21,7 @@ class ProductSeeder extends Seeder
                 'condition' => 'bekas',
                 'price' => 500000,
                 'description' => 'Album keluaran tahun 1980',
-                'category' => 'Musik',
+                'category' => 17,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -31,7 +31,7 @@ class ProductSeeder extends Seeder
                 'condition' => 'baru',
                 'price' => 1500000,
                 'description' => 'Gitar akustik berkualitas tinggi',
-                'category' => 'Musik',
+                'category' => 17,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -41,7 +41,7 @@ class ProductSeeder extends Seeder
                 'condition' => 'bekas',
                 'price' => 3500000,
                 'description' => 'Kamera DSLR Canon dengan lensa kit',
-                'category' => 'Elektronik',
+                'category' => 4,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -51,7 +51,7 @@ class ProductSeeder extends Seeder
                 'condition' => 'baru',
                 'price' => 800000,
                 'description' => 'Sepatu olahraga dengan teknologi Air Max',
-                'category' => 'Fashion',
+                'category' => 2,
                 'created_at' => now(),
                 'updated_at' => now()
             ],
@@ -61,7 +61,7 @@ class ProductSeeder extends Seeder
                 'condition' => 'baru',
                 'price' => 200000,
                 'description' => 'Buku panduan pemrograman PHP',
-                'category' => 'Buku',
+                'category' => 6,
                 'created_at' => now(),
                 'updated_at' => now()
             ],

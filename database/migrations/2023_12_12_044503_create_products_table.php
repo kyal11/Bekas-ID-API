@@ -15,12 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable(false);
             $table->string('name');
-            $table->enum('condition',['bekas','baru']);
+            $table->enum('condition', ['sering digunakan', 'barang baru', 'seperti baru', 'tidak terlalu sering digunakan', 'digunakan dengan baik']);
             $table->integer('price');
             $table->text('description');
-            $table->string('category');
+            $table->unsignedBigInteger('category_id')->nullable(false);
             $table->timestamps();
 
+            $table->foreign('category_id')->on('categories')->references('id');
             $table->foreign('user_id')->on('users')->references('id');
         });
     }
