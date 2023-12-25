@@ -37,7 +37,7 @@ class AuthController extends Controller
                     'name_file_image' => $filename
                 ]);
     
-                Storage::putFileAs('profile', $request->image_profile, $filename);
+                Storage::putFileAs('public', $request->image_profile, $filename);
             }
     
             return (new AuthResource($user, 'account created successfully'))->response()->setStatusCode(201);

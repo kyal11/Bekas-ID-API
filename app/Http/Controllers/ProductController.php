@@ -71,7 +71,7 @@ class ProductController extends Controller
             'condition' => $data['condition'],
             'price' => $data['price'],
             'description' => $data['description'],
-            'category' => $data['category'],
+            'category_id' => $data['category_id'],
         ]);
         
         $this->handleImageUpload($data, $product);
@@ -173,7 +173,7 @@ class ProductController extends Controller
 
                 $image = Image::findOrFail($idImage);
 
-                Storage::delete('product/' . $image->name_file_image);
+                Storage::delete('public/' . $image->name_file_image);
 
                 $image->delete();
     
@@ -209,8 +209,7 @@ class ProductController extends Controller
                     $filename = $image->getClientOriginalName();
 
 
-                    $image->storeAs('product', $filename);
-
+                    $image->storeAs('public', $filename);
                     image::updateOrCreate([   
                             'product_id' => $product->id, 
                             'context' => 'product',

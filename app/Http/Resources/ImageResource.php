@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ImageResource extends JsonResource
 {
@@ -19,7 +20,7 @@ class ImageResource extends JsonResource
             'user_id' => $this->whenNotNull($this->user_id),
             'product_id' => $this->whenNotNull($this->product_id),
             'context' => $this->context,
-            'name_file_image' => $this->name_file_image,
+            'name_file_image' => Storage::url($this->name_file_image),
         ];
     }
 }

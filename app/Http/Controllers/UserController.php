@@ -77,7 +77,7 @@ class UserController extends Controller
                     ['name_file_image' => $filename]
                 );
     
-                $request->image_profile->storeAs('profile', $filename);
+                $request->image_profile->storeAs('public', $filename);
             }
     
             return response()->json([

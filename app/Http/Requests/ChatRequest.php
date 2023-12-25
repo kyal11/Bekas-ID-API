@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ChatRequest extends FormRequest
 {
@@ -28,5 +30,12 @@ class ChatRequest extends FormRequest
             'sender_type' => 'required',
             'chat' => 'required'
         ];
+    }
+    protected function failedValidation(Validator $validator) {
+        throw new HttpResponseException(response([
+            'status' => false,
+            'message' => 'Validation Error',
+            'errors' => $validator->getMessageBag()
+        ],403));
     }
 }

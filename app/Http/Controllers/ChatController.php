@@ -145,7 +145,6 @@ class ChatController extends Controller
             }
 
             if ($user->id == $offer->user_id || $user->id == $offer->seller_id || $user->role_id == 1) {
-                // Hapus semua chat yang terkait dengan penawaran
                 Chat::where('offer_id', $offerId)->delete();
 
                 return response()->json([
