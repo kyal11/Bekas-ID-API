@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\ProductController;
@@ -20,52 +21,61 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-Route::get('/', function () {
-    return response()->json([
-        'status' => false,
-        'message' => 'Invalid Token'
-    ], 401);
-})->name('login');
-
+// Auth Routes
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
+// Unauthorized Access Route
+Route::get('/', fn () => response()->json(['status' => false, 'message' => 'Invalid Token'], 401))->name('login');
+
+// Authenticated Routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('current-user', [AuthController::class, 'currentUser']);
     Route::delete('logout', [AuthController::class, 'logout']);
 
-    Route::post('users', [UserController::class, 'update']);
-    Route::delete('users/{id}', [UserController::class, 'destroy']);
+    Route::prefix('users')->group(function () {
+        Route::post('/', [UserController::class, 'update']);
+        Route::delete('{id}', [UserController::class, 'destroy']);
+        Route::get('{id}/review', [UserController::class, 'getUserWithReview']);
+    });
 
-    Route::post('product', [ProductController::class, 'store']);
-    Route::post('product/{id}', [ProductController::class, 'update']);
-    Route::delete('product/{id}', [ProductController::class, 'destroy']);
-    Route::delete('product/{idProduct}/image/{idImage}', [ProductController::class, 'deleteProductImageById']);
+    Route::prefix('product')->group(function () {
+        Route::post('/', [ProductController::class, 'store']);
+        Route::post('{id}', [ProductController::class, 'update']);
+        Route::delete('{id}', [ProductController::class, 'destroy']);
+        Route::delete('{idProduct}/image/{idImage}', [ProductController::class, 'deleteProductImageById']);
+        Route::post('{id}/offer', [OfferController::class, 'store']);
+        Route::put('{idProduct}/offer/{idOffer}/accept', [OfferController::class, 'setAcceptOffer']);
+        Route::put('{idProduct}/offer/{idOffer}/reject', [OfferController::class, 'setRejectOffer']);
+        Route::get('{idProduct}/offer', [OfferController::class, 'getAllOffers']);
+        Route::get('{idProduct}/offer/{idOffer}', [OfferController::class, 'getDetailOffer']);
+        Route::put('{idProduct}/offer/{idOffer}', [OfferController::class, 'updateOffer']);
+        Route::delete('{idProduct}/offer/{idOffer}', [OfferController::class, 'deleteOffer']);
+    });
 
-    Route::post('product/{id}/offer', [OfferController::class, 'store']);
-    Route::put('/product/{idProduct}/offer/{idOffer}/accept', [OfferController::class, 'setAcceptOffer']);
-    Route::put('/product/{idProduct}/offer/{idOffer}/reject', [OfferController::class, 'setRejectOffer']);
-    Route::get('/product/{idProduct}/offer', [OfferController::class, 'getAllOffers']);
-    Route::get('/product/{idProduct}/offer/{idOffer}', [OfferController::class, 'getDetailOffer']);
-    Route::put('/product/{idProduct}/offer/{idOffer}', [OfferController::class, 'updateOffer']);
-    Route::delete('/product/{idProduct}/offer/{idOffer}', [OfferController::class, 'deleteOffer']);
-
-    Route::post('chat', [ChatController::class, 'store']);
-    Route::get('chat/offer/{id}' , [ChatController::class, 'getChatByOffer']);
-    Route::get('chat/{idUser}/{idSeller}', [ChatController::class, 'getChatBetweenUserAndSeller']);
-    Route::delete('chat/offer/{id}' , [ChatController::class, 'destroyByOffer']);
-    Route::delete('chat/{idUser}/{idSeller}', [ChatController::class, 'destroyByUserAndSeller']);
+    Route::prefix('chat')->group(function () {
+        Route::post('/', [ChatController::class, 'store']);
+        Route::get('offer/{id}', [ChatController::class, 'getChatByOffer']);
+        Route::get('{idUser}/{idSeller}', [ChatController::class, 'getChatBetweenUserAndSeller']);
+        Route::delete('offer/{id}', [ChatController::class, 'destroyByOffer']);
+        Route::delete('{idUser}/{idSeller}', [ChatController::class, 'destroyByUserAndSeller']);
+    });
 
     Route::post('review', [ReviewController::class, 'store']);
+    
+    Route::prefix('category')->group(function () {
+        Route::post('/', [CategoryController::class, 'store']);
+        Route::put('{id}', [CategoryController::class, 'update']);
+        Route::delete('{id}', [CategoryController::class, 'destroy']);
+    });
 });
 
-
+// Public Routes
 Route::get('product', [ProductController::class, 'index']);
 Route::get('product/{id}', [ProductController::class, 'show']);
-
+Route::get('category', [CategoryController::class, 'index']);
+Route::get('category/{id}', [CategoryController::class, 'show']);
+Route::get('category/{id}/product', [CategoryController::class, 'getProductByCategory']);
 Route::get('users', [UserController::class, 'index']);
 Route::get('users/{id}', [UserController::class, 'show']);
 Route::get('users/{id}/review', [UserController::class, 'getUserWithReview']);

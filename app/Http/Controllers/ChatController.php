@@ -104,9 +104,7 @@ class ChatController extends Controller
         try {
             $user = $request->user();
 
-            // Pastikan hanya user atau seller yang terlibat yang dapat menghapus data chat
             if ($user->id == $userId || $user->id == $sellerId || $user->role_id == 1) {
-                // Hapus semua chat yang terkait dengan user dan seller
                 Chat::where(function ($query) use ($userId, $sellerId) {
                     $query->where('user_id', $userId)
                         ->where('seller_id', $sellerId);
@@ -139,7 +137,6 @@ class ChatController extends Controller
             $user = $request->user();
             $offer = offers::find($offerId);
 
-            // Pastikan offer ditemukan
             if (!$offer) {
                 return response()->json([
                     'status' => false,
@@ -147,7 +144,6 @@ class ChatController extends Controller
                 ], 404);
             }
 
-            // Pastikan hanya user atau seller yang terlibat dalam offer yang dapat menghapus data chat
             if ($user->id == $offer->user_id || $user->id == $offer->seller_id || $user->role_id == 1) {
                 // Hapus semua chat yang terkait dengan penawaran
                 Chat::where('offer_id', $offerId)->delete();
