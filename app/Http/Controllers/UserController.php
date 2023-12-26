@@ -121,4 +121,26 @@ class UserController extends Controller
         }
     }
 
+    public function destroy(Request $request, $id)
+    {
+        try {
+            $user = User::findOrFail($id);
+           
+            if ($request->user()->id == $id || $request->user()->role_id == 1) {
+                $user->delete();
+
+                return response()->json([
+                    'status' => true,
+                    'message' => 'User deleted successfully',
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized to delete user',
+                ], 403);
+            }
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage(), 500);
+        }
+    }
 }

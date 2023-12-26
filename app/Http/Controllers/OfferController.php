@@ -114,16 +114,31 @@ class OfferController extends Controller
         }
     }
 
-    public function getAllOffers($idProduct)
+    public function getAllOffers(Request $request, $idProduct)
     {
         try {
             $offers = offers::where('product_id', $idProduct)->get();
 
-            return response()->json([
-                'status' => true,
-                'message' => 'All offers retrieved successfully',
-                'data' => OfferResource::collection($offers)
-            ]);
+            if (!$offers) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Product or Offer not found'
+                ], 404);
+            }
+            $user = $request->user();
+            
+            if ($user->id == $offers->first()->user_id || $user->id == $offers->first()->seller_id || $user->role_id == 1) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'All offers retrieved successfully',
+                    'data' => OfferResource::collection($offers)
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized to get offers',
+                ], 403);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -133,7 +148,7 @@ class OfferController extends Controller
         }
     }
 
-    public function getDetailOffer($idProduct, $idOffer)
+    public function getDetailOffer(Request $request, $idProduct, $idOffer)
     {
         try {
             $offer = offers::where('product_id', $idProduct)->find($idOffer);
@@ -144,12 +159,20 @@ class OfferController extends Controller
                     'message' => 'Offer not found'
                 ], 404);
             }
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Offer retrieved successfully',
-                'data' => new OfferResource($offer)
-            ]);
+            $user = $request->user();
+            
+            if ($user->id == $offer->first()->user_id || $user->id == $offer->first()->seller_id || $user->role_id == 1) {
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Offer retrieved successfully',
+                    'data' => new OfferResource($offer)
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized to get detail offer',
+                ], 403);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,

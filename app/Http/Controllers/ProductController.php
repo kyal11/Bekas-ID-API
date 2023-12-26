@@ -75,15 +75,15 @@ class ProductController extends Controller
         ]);
         
         $this->handleImageUpload($data, $product);
-
+        $product = Product::with('image')->findOrFail($product->id);
         return response()->json([
             'status' => true,
             'message' => 'Product created successfully',
-            'data' => $product,
+            'data' => new ProductResource($product),
         ]);
     }
 
-    public function update(ProductCreateRequest $request, $id) {
+    public function update(ProductUpdateRequest $request, $id) {
         try {
             $data = $request->validated();
             $user = $request->user();
