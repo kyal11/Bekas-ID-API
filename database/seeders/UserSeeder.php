@@ -21,7 +21,8 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('Admin'),
                 'phone_number' => '083812721450',
                 'role_id' => 1,
-                'created_at' => now()
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'name' => 'Seller',
@@ -29,7 +30,8 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('seller'),
                 'phone_number' => '083812721451',
                 'role_id' => 2,
-                'created_at' => now()
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'name' => 'Customer',
@@ -37,7 +39,8 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('customer'),
                 'phone_number' => '083812721452',
                 'role_id' => 2,
-                'created_at' => now()
+                'created_at' => now(),
+                'updated_at' => now()
             ]
         ]);
     }

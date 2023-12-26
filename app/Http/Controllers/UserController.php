@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\ReviewResource;
 use App\Http\Resources\UserResource;
 use App\Models\image;
 use App\Models\User;
@@ -101,11 +102,19 @@ class UserController extends Controller
                     'message' => 'User not found',
                 ], 404);
             }
+            $totalReviews = $user->sellerReview->count();
+            $averageRating = $totalReviews > 0 ? number_format($user->sellerReview->avg('rating'), 2) : 0;
+            $reviewData = $totalReviews > 0 ? ReviewResource::collection($user->sellerReview) : null;
 
+            $userData = new UserResource($user);
+            $userData['total_reviews'] = $totalReviews;
+            $userData['average_rating'] = $averageRating;
+            $userData['review'] = $reviewData;
+            
             return response()->json([
                 'status' => true,
                 'message' => 'Successful found user with reviews',
-                'data' => new UserResource($user)
+                'data' => new UserResource($userData)
             ], 200);
         } catch (\Exception $e) {
             return $this->errorResponse($e->getMessage(), 500);
