@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserUpdateRequest;
+use App\Http\Resources\OfferResource;
 use App\Http\Resources\ReviewResource;
 use App\Http\Resources\UserResource;
 use App\Models\image;
@@ -37,7 +38,11 @@ class UserController extends Controller
                 'data' => UserResource::collection($users)
             ]);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500);
+            return response()->json([
+                'status' => false,
+                'message' => 'Error get user',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
     
@@ -56,7 +61,11 @@ class UserController extends Controller
                 'data' => new UserResource($user)
             ], 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500);
+            return response()->json([
+                'status' => false,
+                'message' => 'Error get user',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
     
@@ -87,7 +96,11 @@ class UserController extends Controller
                 'data' => new UserResource($user)
             ]);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500);
+            return response()->json([
+                'status' => false,
+                'message' => 'Error update user',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
     
@@ -117,10 +130,50 @@ class UserController extends Controller
                 'data' => new UserResource($userData)
             ], 200);
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500);
+            return response()->json([
+                'status' => false,
+                'message' => 'Error get user review',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
+    public function getUserWithOffer(Request $request, $id) {
+        try {
+            $user = $request->user();
+            $data = User::with('image', 'userOffers' , 'sellerOffers')->findOrFail($id);
+
+            if (!$data) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'User not found',
+                ], 404);
+            }
+            if ($user->id == $data->id || $user->role_id == 1) {
+
+                // $userData = new UserResource($data);
+                // $userData['offers_user'] = $data->userOffers->isEmpty() ? null : OfferResource::collection($data->userOffers);
+                // $userData['offers_seller'] = $data->sellerOffers->isEmpty() ? null : OfferResource::collection($data->sellerOffers);
+                
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Successful found user with offers',
+                    'data' => new UserResource($data)
+                ], 200);
+            }else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized to access user offers',
+                ], 403);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error get user offer',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
     public function destroy(Request $request, $id)
     {
         try {
@@ -140,7 +193,11 @@ class UserController extends Controller
                 ], 403);
             }
         } catch (\Exception $e) {
-            return $this->errorResponse($e->getMessage(), 500);
+            return response()->json([
+                'status' => false,
+                'message' => 'Error deleting user',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 }

@@ -24,7 +24,6 @@ class ChatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required',
             'seller_id' => 'required',
             'offer_id' => 'required',
             'sender_type' => 'required',

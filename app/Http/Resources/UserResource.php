@@ -24,6 +24,8 @@ class UserResource extends JsonResource
                 'total_reviews' => $this->whenNotNull($this->total_reviews),
                 'average_rating' => $this->whenNotNull($this->average_rating),
                 'review' => $this->whenNotNull($this->review),
+                'offers_user' => OfferResource::collection($this->whenLoaded('userOffers')),
+                'offers_seller' => OfferResource::collection($this->whenLoaded('sellerOffers')),
             ];
     }
 }

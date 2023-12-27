@@ -114,7 +114,7 @@ class OfferController extends Controller
         }
     }
 
-    public function getAllOffers(Request $request, $idProduct)
+    public function getAllOffers($idProduct)
     {
         try {
             $offers = offers::where('product_id', $idProduct)->get();
@@ -125,20 +125,11 @@ class OfferController extends Controller
                     'message' => 'Product or Offer not found'
                 ], 404);
             }
-            $user = $request->user();
-            
-            if ($user->id == $offers->first()->user_id || $user->id == $offers->first()->seller_id || $user->role_id == 1) {
-                return response()->json([
-                    'status' => true,
-                    'message' => 'All offers retrieved successfully',
-                    'data' => OfferResource::collection($offers)
-                ]);
-            } else {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'Unauthorized to get offers',
-                ], 403);
-            }
+            return response()->json([
+                'status' => true,
+                'message' => 'All offers retrieved successfully',
+                'data' => OfferResource::collection($offers)
+            ]);
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -184,6 +175,7 @@ class OfferController extends Controller
     public function updateOffer(OfferCreateRequest $request, $idProduct, $idOffer)
     {
         try {
+            $user = $request->user();
             $offer = offers::where('product_id', $idProduct)->find($idOffer);
             if (!$offer) {
                 return response()->json([
@@ -193,14 +185,20 @@ class OfferController extends Controller
             }
 
             $data = $request->validated();
+            if ($user->id == $offer->user_id || $user->id == $offer->seller_id || $user->role_id == 1) {
+                $offer->update($data);
 
-            $offer->update($data);
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Offer updated successfully',
-                'data' => new OfferResource($offer)
-            ]);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Offer updated successfully',
+                    'data' => new OfferResource($offer)
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized to update offer',
+                ], 403);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -210,24 +208,30 @@ class OfferController extends Controller
         }
     }
 
-    public function deleteOffer($idProduct, $idOffer)
+    public function deleteOffer(Request $request, $idProduct, $idOffer)
     {
         try {
             $offer = offers::where('product_id', $idProduct)->find($idOffer);
-
+            $user = $request->user();
             if (!$offer) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Offer not found'
                 ], 404);
             }
+            if ($user->id == $offer->user_id || $user->id == $offer->seller_id || $user->role_id == 1) {
+                $offer->delete();
 
-            $offer->delete();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'Offer deleted successfully'
-            ]);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Offer deleted successfully'
+                ]);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized to delete offer',
+                ], 403);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,

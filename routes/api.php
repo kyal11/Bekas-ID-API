@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/', [UserController::class, 'update']);
         Route::delete('{id}', [UserController::class, 'destroy']);
         Route::get('{id}/review', [UserController::class, 'getUserWithReview']);
+        Route::get('{id}/offer', [UserController::class, 'getUserWithOffer']);
     });
 
     Route::prefix('product')->group(function () {
@@ -79,4 +80,3 @@ Route::get('category/{id}/product', [CategoryController::class, 'getProductByCat
 Route::get('users', [UserController::class, 'index']);
 Route::get('users/{id}', [UserController::class, 'show']);
 Route::get('users/{id}/review', [UserController::class, 'getUserWithReview']);
-Route::get('user/{id}/rating', [UserController::class, '']);
