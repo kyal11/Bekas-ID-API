@@ -12,7 +12,7 @@ RestAPI untuk website bekas.id
 
 
 ## Model
-<img src="https://github.com/kyal11/Challenge-Dot-Backend-Laravel/blob/main/Model-Relasi.png" width="500" />
+<img src="https://github.com/kyal11/Bekas-ID-API/blob/main/doc/Model_Design.png" width="600" />
 
 ## Documentary
 [Documentary with Postman](https://documenter.getpostman.com/view/29947879/2s9Ykt6fFU)
